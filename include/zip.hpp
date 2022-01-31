@@ -38,7 +38,7 @@ struct zip
     iterator &operator++()
     {
       std::apply(
-          [this]<typename... _Tp>(_Tp && ...e) { data_ = forward_as_tuple(++std::forward<_Tp>(e)...); }, data_);
+          [this]<typename... _Tp>(_Tp && ...e) { data_ = make_tuple(++std::forward<_Tp>(e)...); }, data_);
       return *this;
     }
 
@@ -54,14 +54,14 @@ struct zip
 
   auto begin()
   {
-    return iterator(std::apply(
-        []<typename... _Tp>(_Tp && ...e) { return std::forward_as_tuple(std::begin(std::forward<_Tp>(e))...); }, data));
+    return iterator{std::apply(
+        []<typename... _Tp>(_Tp && ...e) { return std::make_tuple(std::begin(std::forward<_Tp>(e))...); }, data)};
   }
 
   auto end()
   {
-    return iterator(std::apply(
-        []<typename... _Tp>(_Tp && ...e) { return std::forward_as_tuple(std::end(std::forward<_Tp>(e))...); }, data));
+    return iterator{std::apply(
+        []<typename... _Tp>(_Tp && ...e) { return std::make_tuple(std::end(std::forward<_Tp>(e))...); }, data)};
   }
 
   std::tuple<T &...> data;
